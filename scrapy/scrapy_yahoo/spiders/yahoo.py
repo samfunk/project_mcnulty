@@ -1,19 +1,19 @@
 import scrapy
+import re
 
 class YahooSpider(scrapy.Spider):
     name = "yahoo"
-    allowed_domains = 'finance.yahoo.com'
-
-    def __init__(self, tickers=[]):
-        self.tickers = tickers
-        self.urls = ['https://finance.yahoo.com/quote/%s/analysts?p=%s' % (tic, tic) for tic in self.tickers]
-
-    def start_requests(self):
-        for url in self.urls:
-            yield scrapy.Request(url, self.parse)
+    #allowed_domains = 'finance.yahoo.com'
+    start_urls = [
+        'https://finance.yahoo.com/quote/FB/analysts?p=FB',
+    ]
+    def __init__(self, filename=None):
+        if filename:
+            with open(filename, 'r') as f:
+                self.start_urls = f.readlines()
 
     def parse(self, response):
-        table = response.css('section[data-test]').css('table').extract()
-        headers = ['earnings est', 'revenue est', 'earnings hist', 'eps trend', 'eps revs', 'growth est']
-        for ind, head in enumerate(headers):
-            yield {head: table[ind]}
+        table = response.css('section[data-test]').css('table')
+        yield {
+            re.search(r'/([A-Z].*[A-Z])/', response.url)[1]: table[2].css('td span::text').extract()
+        }

@@ -1,0 +1,4 @@
+https://finance.yahoo.com/quote/BRK-B/analysts?p=BRK-B
+https://finance.yahoo.com/quote/WFC/analysts?p=WFC
+https://finance.yahoo.com/quote/ITW/analysts?p=ITW
+https://finance.yahoo.com/quote/BF-B/analysts?p=BF-B
