@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <body>
+  	<h1>Predict the Earnings Surprise!</h1>
+    <br>
+    <img src="https://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2015/01/06/102314625-CBOE_Traders.530x298.jpg?v=1497633897" />
+    <h2>Enter your company</h2>
+    <input type="text" id="company" value="Stock Ticker"></input>
+    <br><br>
+    <button id="button" onclick="postData()">Submit</button>
+    <br>
+    <p>Earnings Surprise: <div id="surprise">?</div></p>
+    <p>Prediction: <div id="prediction">?</div></p>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <script>
+
+		function postData(){
+      var ticker = document.getElementById("company").value;
+
+      $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        url: "/stock",
+        dataType: "json",
+        async: true,
+        data: "{\"ticker\": \"" + ticker + "\"}",
+        success: function (result) {
+
+          if (result["surprise"] == "null") {
+            document.getElementById("surprise").textContent = "No recent earnings report!";
+            document.getElementById("prediction").textContent = "No recent earnings report!";
+            document.getElementById("test").textContent = "YABOOBAY";
+          }
+
+          else {
+            document.getElementById("surprise").textContent = result["surprise"];
+
+            if (result["score"] == 0) {
+              document.getElementById("prediction").textContent = "Close (≤ 5%)";
+            }
+
+            else {
+              document.getElementById("prediction").textContent = "Far (> 5%)";
+            }
+          }
+
+        }
+      })
+		};
+    </script>
+  </body>
+</html>
